@@ -240,7 +240,6 @@ process get_software_versions {
     kronik | head -n2 > v_kr.txt
     percolator -h |& head -n1 > v_perco.txt || true
     msspsmtable --version > v_mss.txt
-    source activate openms-2.4.0
     IsobaricAnalyzer |& grep Version > v_openms.txt || true
     scrape_software_versions.py > software_versions_mqc.yaml
     """
@@ -315,7 +314,6 @@ process quantifySpectra {
   # then run kronik on hardklor and quant isobaric labels if necessary
   hardklor <(cat $hkconf <(echo "$infile" hardklor.out))
   kronik -c 5 -d 3 -g 1 -m 8000 -n 600 -p 10 hardklor.out ${sample}.kr
-  source activate openms-2.4.0
   ${params.isobaric ? "IsobaricAnalyzer  -type $params.isobaric -in $infile -out \"${infile}.consensusXML\" -extraction:select_activation \"$activationtype\" -extraction:reporter_mass_shift $massshift -extraction:min_precursor_intensity 1.0 -extraction:keep_unannotated_precursor true -quantification:isotope_correction true" : ''}
   """
 }
